@@ -4,7 +4,8 @@
     "target": "es5",
     "module": "commonjs",
     "outDir": "./bin",          
-    "strict": true,             
+    "strict": true,         
+    "resolveJsonModule": true,    
     "esModuleInterop": true,
   },
   "files": [

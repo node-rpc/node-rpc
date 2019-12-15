@@ -21,6 +21,7 @@
     "@types/flatbuffers": "^1.9.1",
     "@types/node": "^12.12.14",
     "byte": "^2.0.0",
+    "commander": "^4.0.1",
     "flatbuffers": "^1.11.0",
     "long": "^4.0.0",
     "node": "^12.13.0"
