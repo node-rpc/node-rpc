@@ -1,0 +1,1 @@
+type LEORBE = "LE" | "BE";

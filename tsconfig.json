@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./bin",          
+    "strict": true,             
+    "esModuleInterop": true,
+  },
+  "files": [
+    "./src/client/client.ts",
+    "./src/server/server.ts"
+  ],
+}
