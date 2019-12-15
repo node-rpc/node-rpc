@@ -1,0 +1,28 @@
+{
+  "name": "node-rpc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/treeandgrass/node-rpc.git",
+  "author": "treeandgrass <mymymymypcy@163.com>",
+  "license": "MIT",
+  "scripts": {
+    "bin": "tsc -p .",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.23",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.2.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2",
+    "typescript-eslint-parser": "^22.0.0"
+  },
+  "dependencies": {
+    "@types/flatbuffers": "^1.9.1",
+    "@types/node": "^12.12.14",
+    "byte": "^2.0.0",
+    "flatbuffers": "^1.11.0",
+    "long": "^4.0.0",
+    "node": "^12.13.0"
+  }
+}
