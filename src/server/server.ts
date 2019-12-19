@@ -1,27 +1,33 @@
 import EventEmitter from "events";
 import net from "net";
+import Context from "./context";
+import Middleware, { MF } from "./middleware";
 
 interface IServerConfig {
     port: number;
-    ip?: string;
+    host?: string;
 }
 
 export default class Server extends EventEmitter {
     private port: number;
     private server: net.Server | null;
-    private ip: string;
+    private host: string;
+    private middleware: Middleware;
+    private ctxList: Context[];
 
     constructor(config: IServerConfig) {
         super();
 
         this.port = config.port;
         this.server = null;
-        this.ip = config.ip || "127.0.0.1";
+        this.host = config.host || "127.0.0.1";
+        this.middleware = new Middleware();
+        this.ctxList = [];
     }
 
     public start(): void {
         this.server =  net.createServer();
-        this.server.listen(this.port, this.ip);
+        this.server.listen(this.port, this.host);
 
         // listen
         this.server.on("connection", (socket: net.Socket) => this.connect(socket));
@@ -29,11 +35,32 @@ export default class Server extends EventEmitter {
     }
 
     public connect(socket: net.Socket) {
-        console.log(`connnection: ${JSON.stringify(process.env)}`);
+        const ctx: Context = new Context(socket);
+        this.ctxList.push(ctx);
+        this.middleware.run(ctx);
     }
 
-    public handleError(err: Error) {
-        console.log(err);
+    /**
+     * register middleware
+     * @param mf
+     */
+    public use(mf: MF) {
+        this.middleware.use(mf);
     }
 
+    /**
+     * destroy server
+     */
+    public stop() {
+        this.ctxList.forEach((ctx: Context) => {
+            ctx.socket.destroy();
+        });
+
+        this.ctxList = [];
+        this.server?.close();
+    }
+
+    private handleError(err: Error) {
+        this.emit("error", err);
+    }
 }
