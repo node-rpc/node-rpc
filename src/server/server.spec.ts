@@ -23,8 +23,9 @@ describe("test server", () => {
             signale.debug("log middleware  is runed");
             signale.debug(`socket buffer size ${ctx.socket.bufferSize}`);
             signale.debug(`contex uuid ${ctx.uuid}`);
-
-            next();
+            if (next) {
+                next();
+            }
         }
         server.use(log);
     });
@@ -33,6 +34,9 @@ describe("test server", () => {
         async function socketEnd(ctx: Context, next: NextFNType) {
             signale.debug("socket call end");
             ctx.socket.end("end middleware");
+            if (next) {
+                next();
+            }
         }
 
         server.use(socketEnd);

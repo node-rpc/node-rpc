@@ -20,11 +20,14 @@ export default class Router {
      */
     public async use(ctx: Contex, next: NextFNType) {
         const receive: IReceiveDataType = ctx.receive;
-        if (receive && receive.identifer) {
-            this.emit(receive.identifer, ctx);
+        if (receive && receive.identifier) {
+            this.emit(receive.identifier, ctx);
         }
 
-        await next();
+        if (next) {
+            await next();
+        }
+
     }
 
     public setRoute(route: MF) {
