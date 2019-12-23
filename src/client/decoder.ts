@@ -1,13 +1,15 @@
-import net from "net";
-
 import { IChanelDataType } from "./type";
 
 export interface IDecoder {
-    decode(socket: net.Socket): IChanelDataType;
+    decode(message: string | Buffer): IChanelDataType | string;
 }
 
 export default class Decoder implements IDecoder {
-    public decode(socket: net.Socket): IChanelDataType {
-        return {};
+    public decode(message: string | Buffer): IChanelDataType | string {
+        if (typeof message === "string") {
+            return message;
+        } else {
+            return { recieve : "mock!!" };
+        }
     }
 }

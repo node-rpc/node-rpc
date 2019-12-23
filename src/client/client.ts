@@ -1,3 +1,4 @@
+import EventEmitter from "events";
 import net from "net";
 import Decoder, { IDecoder } from "./decoder";
 import Encoder, { IEncoder } from "./encoder";
@@ -6,33 +7,39 @@ import { IChanelDataType } from "./type";
 export interface IServerConfig {
     ip: string;
     port: number;
+    duration?: number;
 }
 
-class Client {
+export default class Client extends EventEmitter {
     private config: IServerConfig;
     private encoder: Encoder;
     private decoder: Decoder;
     private socket: net.Socket;
     private queue: IChanelDataType[];
     private ready: boolean;
-    private bufferCache: Buffer[];
-    private stringCache: string[];
+    private duration: number;
+    // private bufferCache: Buffer[];
+    // private stringCache: string[];
 
     constructor(serverConfig: IServerConfig) {
+        super();
+
         this.config = serverConfig;
         this.encoder = new Encoder();
         this.decoder = new Decoder();
         this.socket = new net.Socket();
-        this.bufferCache = [];
-        this.stringCache = [];
+        // this.bufferCache = [];
+        // this.stringCache = [];
         this.queue = [];
         this.ready = false;
+        this.duration = serverConfig.duration || 100; // thresold message to wait
 
         this.attach();
     }
 
     public connnect() {
-        this.socket.connect(this.config);
+        const { port, ip } = this.config;
+        this.socket.connect(port, ip);
     }
 
     public useEncoder(encoder: IEncoder): void {
@@ -47,18 +54,29 @@ class Client {
         return this.encoder.encode(dataWillBeDecode);
     }
 
-    public decode(socket: net.Socket): IChanelDataType {
-        return this.decoder.decode(socket);
+    public decode(dataReceived: string | Buffer) {
+        const decodeReceiveData: string | IChanelDataType = this.decoder.decode(dataReceived);
+        this.emit("data", decodeReceiveData);
     }
 
     public write(dataWillBeSend: IChanelDataType): boolean {
+        const waitStartingTime: number | undefined = dataWillBeSend.waitStartingTime;
+        const now: number = Date.now();
+
+        if (waitStartingTime && now - waitStartingTime > this.duration) {
+            this.emit("throwway", dataWillBeSend);
+            return true;
+        }
+
         return this.socket.write(this.encode(dataWillBeSend));
     }
 
     public push(sendData: IChanelDataType) {
-        if (this.ready) {
+        if (this.ready && this.queue.length <= 0) {
             this.write(sendData);
         } else {
+            // count wait time
+            sendData.waitStartingTime = Date.now();
             this.queue.push(sendData);
         }
     }
@@ -84,11 +102,7 @@ class Client {
         });
 
         this.socket.on("data", (data: Buffer | string) => {
-            if (typeof data === "string") {
-                this.stringCache.push(data);
-            } else {
-                this.bufferCache.push(data);
-            }
+            this.decode(data);
         });
     }
 }

@@ -8,6 +8,6 @@ export interface IEncoder {
 
 export default class Encoder implements IEncoder {
     public encode(dataWillBeEncode: IChanelDataType): Buffer {
-        return Buffer.alloc(1);
+        return Buffer.alloc(128);
     }
 }
