@@ -9,8 +9,9 @@ export interface IReceiveDataType {
 export default class Context {
     public socket: net.Socket;
     public receive: IReceiveDataType;
-    public dataWillBeDecode?: IReceiveDataType;
+    public dataWillBeEncode?: IReceiveDataType;
     public dataWillBeSend?: Buffer;
+    public dataWillBeDecode?: Buffer | string;
     public uuid: string;
 
     constructor(socket: net.Socket) {

@@ -39,8 +39,18 @@ describe("client unit test", () => {
             signale.debug(`recive data ${JSON.stringify(ctx.receive)}`);
             signale.debug("set send data:");
 
-            ctx.dataWillBeDecode = {
+            ctx.dataWillBeEncode = {
                 send: "send data",
+            };
+        });
+
+        router.on("homework", (ctx: Context) => {
+            signale.debug("homework router is runed");
+            signale.debug(`recive data ${JSON.stringify(ctx.receive)}`);
+            signale.debug("set send data:");
+
+            ctx.dataWillBeEncode = {
+                set: "homework",
             };
         });
     });
@@ -68,6 +78,7 @@ describe("client unit test", () => {
             data: {
                 arr: [],
             },
+            identifier: "dowork",
             msg: "success",
             status: 200,
         };
@@ -75,9 +86,25 @@ describe("client unit test", () => {
         signale.debug("write data finished !!");
     });
 
+    test("write message2", () => {
+        setTimeout(() => {
+            const message = {
+                data: {
+                    arr: [2, 3, 4],
+                },
+                identifier: "homework",
+                msg: "success",
+                status: 300,
+            };
+            client.push(message);
+            signale.debug("write data2 finished !!");
+        }, 100);
+    });
+
     test("test recieve data", () => {
         signale.debug("listen data event");
         client.on("data", (msg) => {
+            signale.debug("client recieve data:");
             signale.debug(msg);
         });
     });

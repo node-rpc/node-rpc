@@ -37,7 +37,7 @@ export default class Server extends EventEmitter {
     public connect(socket: net.Socket) {
         const ctx: Context = new Context(socket);
         this.ctxList.push(ctx);
-        this.middleware.run(ctx);
+        this.listen(ctx);
     }
 
     /**
@@ -62,5 +62,12 @@ export default class Server extends EventEmitter {
 
     private handleError(err: Error) {
         this.emit("error", err);
+    }
+
+    private listen(ctx: Context) {
+        ctx.socket.on("data", (data: Buffer | string ) => {
+            ctx.dataWillBeDecode = data;
+            this.middleware.run(ctx);
+        });
     }
 }

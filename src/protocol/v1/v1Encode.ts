@@ -1,4 +1,5 @@
 import { Buffer } from "buffer";
+import hessian from "hessian.js";
 import Context, { IReceiveDataType } from "../../server/context";
 import { NextFNType } from "../../server/middleware";
 import ProtocolEncode from "../protocolEncode";
@@ -17,9 +18,9 @@ export default class V1Encode implements ProtocolEncode {
     }
 
     public encode(ctx: Context): void {
-        const dataWillBeDecode: IReceiveDataType | undefined = ctx.dataWillBeDecode;
-        if (dataWillBeDecode) {
-            ctx.dataWillBeSend = Buffer.alloc(10);
+        const dataWillBeEncode: IReceiveDataType | undefined = ctx.dataWillBeEncode;
+        if (dataWillBeEncode) {
+            ctx.dataWillBeSend = hessian.encode(dataWillBeEncode, "2.0");
         }
     }
 }

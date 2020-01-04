@@ -62,12 +62,10 @@ export default class Client extends EventEmitter {
     public write(dataWillBeSend: IChanelDataType): boolean {
         const waitStartingTime: number | undefined = dataWillBeSend.waitStartingTime;
         const now: number = Date.now();
-
         if (waitStartingTime && now - waitStartingTime > this.duration) {
             this.emit("throwway", dataWillBeSend);
             return true;
         }
-
         return this.socket.write(this.encode(dataWillBeSend));
     }
 

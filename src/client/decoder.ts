@@ -1,3 +1,5 @@
+import hessian from "hessian.js";
+import signale from "signale";
 import { IChanelDataType } from "./type";
 
 export interface IDecoder {
@@ -9,7 +11,7 @@ export default class Decoder implements IDecoder {
         if (typeof message === "string") {
             return message;
         } else {
-            return { recieve : "mock!!" };
+            return hessian.decode(message, "2.0");
         }
     }
 }
