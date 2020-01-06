@@ -1,20 +1,22 @@
 import EventEmitter from "events";
 import ZooKeeper from "zookeeper";
+import signale from "signale";
 
 
 const ZKPromise = ZooKeeper.Promise;
 type ZK = typeof ZKPromise;
 type BindWatchFunction = (path: string) => void;
 type watcherFn = (type: number, state: number, path: string) => void;
+type cbWatch = (cbParams: any) => void;
 
 export interface IZKSelfConfig {
     connect: string;
     timeout: number;
-    debug_level: number;
+    debug_level?: number;
     host_order_deterministic?: boolean;
 }
 
-export class ZKClient extends EventEmitter {
+export default class ZKClient extends EventEmitter {
 
     private zkConfig: IZKSelfConfig;
     private client: ZK;
@@ -40,17 +42,48 @@ export class ZKClient extends EventEmitter {
         this.watcher = this.watch.bind(this, this.client, this.listen);
     }
 
+    public async connect(initParams: { [key: string]: any } = {}): Promise<any> {
+        try {
+            const pe = new Promise((resolve) => {
+                this.client.on("connect", () => {
+                    resolve(true);
+                });
+            }).catch((e) => {
+                throw e;
+            });
+            await this.client.init(initParams);
+            return await pe;
+        } catch (e) {
+            this.emit("connectError", e);
+        }
+    }
+
     /**
      * create node on zookeeper
      * @param path
      * @param flags
      * @param data
      */
-    public async create(path: string, flags: number, data: string | Buffer) {
+    public async create(path: string, data: string | Buffer, flags: number, ) {
         try {
-            await this.client.create(path, flags, data);
+            return await this.client.create(path, flags, data);
         } catch (e) {
-            this.emit("createNodeError", e);
+            this.emit("createError", e);
+            return false;
+        }
+    }
+
+    /**
+     * judge node is exist
+     * @param path
+     * @param watch
+     */
+    public async exist(path: string, watch?: cbWatch) {
+        try {
+            return await this.client.exists(path, watch);
+        } catch (e) {
+            this.emit("existError", e);
+            return false;
         }
     }
 
@@ -60,7 +93,7 @@ export class ZKClient extends EventEmitter {
      * @param data
      * @param version
      */
-    public async publish(path: string, data: string | Buffer, version: number): Promise<any> {
+    public async publish(path: string, data: string | Buffer, version?: number): Promise<any> {
         try {
             await this.client.set(path, data, version);
             return true;
@@ -104,7 +137,9 @@ export class ZKClient extends EventEmitter {
      */
     public async listen(path: string): Promise<any> {
         this.watchNode = true;
-        const children: any = await this.client.w_get_children(path, this.watcher);
+        const children: any = await this.client.w_get_children(path, () => {
+            signale.debug("---run callback---");
+        });
         this.emit("onNode", children);
     }
 
@@ -125,8 +160,25 @@ export class ZKClient extends EventEmitter {
         return this.client;
     }
 
+    public async close() {
+        try {
+            return await this.client.close();
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async getAcl(path: string) {
+        try {
+            return await this.client.get_acl(path);
+        } catch (e) {
+            this.emit("getAclError", e);
+            return false;
+        }
+    }
+
     /**
-     * wathc function on node
+     * watch function on node
      * @param client
      * @param func
      * @param type
