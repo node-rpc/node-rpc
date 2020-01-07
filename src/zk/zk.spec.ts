@@ -4,15 +4,16 @@ import ZKClient from "./zk";
 
 const constants = ZooKeeper.constants;
 const path: string = "/hello";
+const path1 = `${path}/child1`;
+const path2 = `${path}/child2`;
 const saveData: string = "hello, start";
-
 
 describe("test zk client", () => {
     const zk = new ZKClient({
         connect: "127.0.0.1:2181",
         debug_level: ZooKeeper.ZOO_LOG_LEVEL_WARN,
         host_order_deterministic: false,
-        timeout: 500,
+        timeout: 5000,
     });
 
 
@@ -21,18 +22,15 @@ describe("test zk client", () => {
         expect(succ).toBe(true);
     });
 
-    test("exist and create", async () => {
-        const isExist: boolean = await zk.exist(path);
-        if (!isExist) {
-            signale.debug(`node ${path} is not exist!, will create ${path}`);
-            zk.create(path, "",  constants.ZOO_EPHEMERAL);
-        }
+    test("mkdir", async () => {
+        const res = await zk.mkdirp(path, (e) => {
+            if (e) {
+                signale.debug(e);
+            }
+        });
     });
 
     test("publish method", async () => {
-        zk.on("publishError", (e) => {
-            signale.error(e);
-        });
         const stat: any = await zk.exist(path);
         const res: boolean = await zk.publish(path, saveData, stat.version);
         expect(res).toBe(true);
@@ -49,54 +47,65 @@ describe("test zk client", () => {
         await zk.delete(path, stat.version);
     });
 
-    // redo
     test("exist and create", async () => {
-        const isExist: boolean = await zk.exist(path);
-        if (!isExist) {
-            signale.debug(`node ${path} is not exist!, will create ${path}`);
-            zk.create(path, "",  constants.ZOO_EPHEMERAL);
-        }
+        zk.on("createError", (e) => {
+            signale.debug(e);
+        });
+        const res = await zk.create(path, saveData,  constants.ZOO_EPHEMERAL);
+        signale.debug(res);
     });
 
-    test("publish method", async () => {
-        zk.on("publishError", (e) => {
-            signale.error(e);
-        });
+    test("query", async () => {
+        const data: any = await zk.query(path);
+        const res: string = data[1].toString();
+        expect(res).toBe(saveData);
+    });
+
+    // redo
+    test("delete method", async () => {
         const stat: any = await zk.exist(path);
-        const res: boolean = await zk.publish(path, saveData, stat.version);
-        expect(res).toBe(true);
+        await zk.delete(path, stat.version);
+    });
+
+    test(`mkdir ${path}`, async () => {
+        const res = await zk.mkdirp(path, (e) => {
+            if (e) {
+                signale.debug(e);
+            }
+        });
     });
 
     test("listen", async () => {
         await zk.listen(path);
     });
 
-    // test("publish method", async () => {
-    //     zk.on("publishError", (e) => {
-    //         signale.error(e);
-    //     });
-    //     const stat: any = await zk.exist(path);
-    //     const res: boolean = await zk.publish(path, saveData, stat.version);
-    //     expect(res).toBe(true);
-    // });
+    test(`mkdir ${path1}`, async () => {
+        const res = await zk.mkdirp(path1, (e) => {
+            if (e) {
+                signale.debug(e);
+            }
+        });
+    });
 
-    // test("get Acl", async () => {
-    //     const res =  await zk.getAcl(path);
-    //     signale.debug(res);
-    // });
+    test(`mkdir ${path2}`, async () => {
+        const res = await zk.mkdirp(path2, (e) => {
+            if (e) {
+                signale.debug(e);
+            }
+        });
+    });
 
-    test("query", async () => {
-        const data: any = await zk.query(path);
-        expect(`node ${path} is not exist!`);
+    test("node map", () => {
+        signale.debug(zk.getNodeMap());
     });
 
     test("test close", async () => {
         await new Promise((resolve) => {
-            Promise.resolve(zk.close()).then((res) => {
-                setTimeout(() => {
+            setTimeout(() => {
+                Promise.resolve(zk.close()).then((res) => {
                     resolve(res);
-                }, 5000);
-            });
+                });
+            }, 5000);
         });
     }, 6000);
 });

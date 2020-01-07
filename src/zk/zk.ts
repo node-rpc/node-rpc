@@ -1,6 +1,5 @@
 import EventEmitter from "events";
 import ZooKeeper from "zookeeper";
-import signale from "signale";
 
 
 const ZKPromise = ZooKeeper.Promise;
@@ -32,7 +31,7 @@ export default class ZKClient extends EventEmitter {
         this.nodeMap = new Map<string, any>();
         this.watchNode = false;
 
-        this.on("onNode", (path: string, children: any) => {
+        this.on("onNode", ({ path, children }) => {
             this.nodeMap.set(path, children);
         });
 
@@ -64,9 +63,9 @@ export default class ZKClient extends EventEmitter {
      * @param flags
      * @param data
      */
-    public async create(path: string, data: string | Buffer, flags: number, ) {
+    public async create(path: string, data: string | Buffer, flags: number) {
         try {
-            return await this.client.create(path, flags, data);
+            return await this.client.create(path, data, flags);
         } catch (e) {
             this.emit("createError", e);
             return false;
@@ -137,10 +136,17 @@ export default class ZKClient extends EventEmitter {
      */
     public async listen(path: string): Promise<any> {
         this.watchNode = true;
-        const children: any = await this.client.w_get_children(path, () => {
-            signale.debug("---run callback---");
-        });
-        this.emit("onNode", children);
+        const children = await this.client.w_get_children(path, this.watcher);
+        this.emit("onNode", { path, children });
+    }
+
+    public async mkdirp(path: string, cb: cbWatch): Promise<any> {
+        try {
+            return await this.client.mkdirp(path, cb);
+        } catch (e) {
+            this.emit("mkdirError", e);
+            return false;
+        }
     }
 
     /**
@@ -175,6 +181,10 @@ export default class ZKClient extends EventEmitter {
             this.emit("getAclError", e);
             return false;
         }
+    }
+
+    public getNodeMap(): Map<string, any> {
+        return this.nodeMap;
     }
 
     /**
