@@ -5,5 +5,5 @@ export interface ISelectElement {
 
 
 export interface IStrategy<T> {
-    select(): T;
+    select(content?: string | number): T;
 }

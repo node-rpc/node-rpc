@@ -1,22 +1,17 @@
 import ConsistentHashStrategy from "./consistentHashStrategy";
-import { IStrategy } from "./iStrategy";
+import { ISelectElement, IStrategy } from "./iStrategy";
 import RandomStrategy from "./randomStrategy";
-import SimpleHashStrategy from "./simpleHashStrategy";
 
+const virtualNodeCount: number = 4;
 
-export default class StrategyFactory<T> {
-    public build(flag: string): IStrategy<T> {
+export default class StrategyFactory<T extends ISelectElement > {
+    public build(elements: T[], flag?: string): IStrategy<T> {
 
-        const identifier: string = flag.toLowerCase();
+        const identifier: string | undefined = flag?.toLowerCase();
 
         if (identifier === "c") {
-            return new ConsistentHashStrategy<T>();
+            return new ConsistentHashStrategy<T>(elements, virtualNodeCount);
         }
-
-        if (identifier === "s") {
-            return new SimpleHashStrategy<T>();
-        }
-
-        return new RandomStrategy<T>();
+        return new RandomStrategy<T>(elements);
     }
 }
