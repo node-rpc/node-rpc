@@ -20,7 +20,6 @@ const BYTE_TYPE_LENGTH = {
     LONG: 8,
 };
 
-
 export default class ByteBuffer extends EventEmitter {
 
     public static alloc(size: number) {

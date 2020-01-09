@@ -7,7 +7,9 @@
   "license": "MIT",
   "scripts": {
     "bin": "tsc -p .",
-    "test": "jest"
+    "test": "jest",
+    "run-ts": "ts-node",
+    "run-js": "node"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
@@ -20,9 +22,16 @@
   "dependencies": {
     "@types/flatbuffers": "^1.9.1",
     "@types/node": "^12.12.14",
+    "@types/signale": "^1.2.1",
+    "@types/uuid": "^3.4.6",
     "byte": "^2.0.0",
+    "commander": "^4.0.1",
     "flatbuffers": "^1.11.0",
+    "hessian.js": "^2.9.0",
     "long": "^4.0.0",
-    "node": "^12.13.0"
+    "node": "^12.13.0",
+    "signale": "^1.4.0",
+    "uuid": "^3.3.3",
+    "zookeeper": "^4.5.1"
   }
 }
