@@ -1,6 +1,6 @@
-import ToStream from "./byte";
+import { ByteBuffer } from "./byte";
 
-const buf = ToStream.alloc(20);
+const buf = ByteBuffer.alloc(20);
 
 describe("test case byte object", () => {
     test("test writeInt8 and readInt8", () => {

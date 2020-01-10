@@ -1,8 +1,7 @@
-import md5 from "../utils/md5";
+import { md5 } from "../utils/md5";
 import { ISelectElement, IStrategy } from "./iStrategy";
-import signale = require("signale");
 
-export default class ConsistentHashStrategy<T extends ISelectElement> implements IStrategy<T> {
+export class ConsistentHashStrategy<T extends ISelectElement> implements IStrategy<T> {
     private elements: T[];
     private nodeMaps: Map<number, T>;
     private virtualNodeCount: number;

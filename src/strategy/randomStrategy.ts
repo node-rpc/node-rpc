@@ -1,6 +1,6 @@
 import { IStrategy } from "./iStrategy";
 
-export default class RandomStrategy<T> implements IStrategy<T> {
+export class RandomStrategy<T> implements IStrategy<T> {
     private elements: T[];
 
     constructor(elements: T[] = []) {

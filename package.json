@@ -1,7 +1,8 @@
 {
-  "name": "node-rpc",
+  "name": "node-rpc-lite",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "repository": "https://github.com/treeandgrass/node-rpc.git",
   "author": "treeandgrass <mymymymypcy@163.com>",
   "license": "MIT",

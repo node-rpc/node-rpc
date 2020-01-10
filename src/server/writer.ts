@@ -1,7 +1,7 @@
 import { NextFNType } from "../server/middleware";
-import Context from "./context";
+import { Context } from "./context";
 
-export  default class Writer {
+export class Writer {
 
     constructor() {
         this.use  = this.use.bind(this);

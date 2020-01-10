@@ -1,14 +1,14 @@
 import EventEmitter from "events";
 import net from "net";
-import Context from "./context";
-import Middleware, { MF } from "./middleware";
+import { Context } from "./context";
+import { MF, Middleware } from "./middleware";
 
 interface IServerConfig {
     port: number;
     host?: string;
 }
 
-export default class Server extends EventEmitter {
+export class Server extends EventEmitter {
     private port: number;
     private server: net.Server | null;
     private host: string;

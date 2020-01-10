@@ -1,4 +1,4 @@
-import Client, { IServerConfig } from "./client";
+import { Client, IServerConfig } from "./client";
 
 export class ComplexClient extends Client {
     constructor() {

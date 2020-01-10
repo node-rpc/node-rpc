@@ -1,6 +1,6 @@
+import signale from "signale";
 import { ISelectElement, IStrategy } from "./iStrategy";
-import StrategyFactory from "./strategyFactory";
-import signale = require("signale");
+import { StrategyFactory } from "./strategyFactory";
 
 describe("test strategy", () => {
     const testElements: ISelectElement[] = [

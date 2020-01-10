@@ -1,10 +1,10 @@
 import EventEmitter from "events";
-import Contex, { IReceiveDataType } from "./context";
+import { Context, IReceiveDataType } from "./context";
 import { MF, NextFNType } from "./middleware";
 
-type Listener = (ctx: Contex) => void;
+type Listener = (ctx: Context) => void;
 
-export default class Router {
+export class Router {
     public route: MF;
     private event: EventEmitter;
 
@@ -18,7 +18,7 @@ export default class Router {
      * @param ctx
      * @param next
      */
-    public async use(ctx: Contex, next: NextFNType) {
+    public async use(ctx: Context, next: NextFNType) {
         const receive: IReceiveDataType = ctx.receive;
         if (receive && receive.identifier) {
             this.emit(receive.identifier, ctx);
@@ -38,7 +38,7 @@ export default class Router {
         this.event.on(eventName, listener);
     }
 
-    private emit(eventName: string, ctx: Contex) {
+    private emit(eventName: string, ctx: Context) {
         this.event.emit(eventName, ctx);
     }
 }

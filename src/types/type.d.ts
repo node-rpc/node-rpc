@@ -9,6 +9,6 @@ declare module 'hessian.js' {
 }
 
 declare module "zookeeper" {
-    const vlaue: any;
+    const value: any;
     export default value;
 }

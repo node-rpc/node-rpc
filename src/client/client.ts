@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import net from "net";
-import Decoder, { IDecoder } from "./decoder";
-import Encoder, { IEncoder } from "./encoder";
+import { Decoder, IDecoder } from "./decoder";
+import { Encoder, IEncoder } from "./encoder";
 import { IChanelDataType } from "./type";
 
 export interface IServerConfig {
@@ -10,7 +10,7 @@ export interface IServerConfig {
     duration?: number;
 }
 
-export default class Client extends EventEmitter {
+export class Client extends EventEmitter {
     private config: IServerConfig;
     private encoder: Encoder;
     private decoder: Decoder;

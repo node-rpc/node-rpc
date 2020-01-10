@@ -1,11 +1,11 @@
-import Context from "./context";
+import { Context } from "./context";
 
 export type NextFNType = () => Promise<any>;
 
 // middleware function type
 export type MF = (ctx: Context, next: NextFNType) => void;
 
-export default class Middleware {
+export class Middleware {
     private middlewares: MF[];
     constructor() {
         this.middlewares = [];

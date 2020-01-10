@@ -1,8 +1,8 @@
 import net from "net";
 import signale from "signale";
-import Context from "./context";
+import { Context } from "./context";
 import { NextFNType } from "./middleware";
-import Server from "./server";
+import { Server } from "./server";
 
 const port: number = 8080;
 

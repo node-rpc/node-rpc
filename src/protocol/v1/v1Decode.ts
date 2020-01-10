@@ -1,11 +1,10 @@
 import { Buffer } from "buffer";
 import hessian from "hessian.js";
-import net from "net";
-import Context from "../../server/context";
+import { Context } from "../../server/context";
 import { NextFNType } from "../../server/middleware";
-import ProtocolDecode from "../protocolDecode";
+import { IProtocolDecode } from "../protocolDecode";
 
-export default class V1Decode implements ProtocolDecode {
+export class V1Decode implements IProtocolDecode {
 
     constructor() {
         this.use = this.use.bind(this);

@@ -6,7 +6,7 @@ export interface IReceiveDataType {
     [key: string]: any;
 }
 
-export default class Context {
+export class Context {
     public socket: net.Socket;
     public receive: IReceiveDataType;
     public dataWillBeEncode?: IReceiveDataType;

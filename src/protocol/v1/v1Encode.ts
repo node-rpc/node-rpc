@@ -1,10 +1,9 @@
-import { Buffer } from "buffer";
 import hessian from "hessian.js";
-import Context, { IReceiveDataType } from "../../server/context";
+import { Context, IReceiveDataType } from "../../server/context";
 import { NextFNType } from "../../server/middleware";
-import ProtocolEncode from "../protocolEncode";
+import { IProtocolEncode } from "../protocolEncode";
 
-export default class V1Encode implements ProtocolEncode {
+export class V1Encode implements IProtocolEncode {
 
     constructor() {
         this.use = this.use.bind(this);

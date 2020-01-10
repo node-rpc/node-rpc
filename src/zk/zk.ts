@@ -15,7 +15,7 @@ export interface IZKSelfConfig {
     host_order_deterministic?: boolean;
 }
 
-export default class ZKClient extends EventEmitter {
+export class ZKClient extends EventEmitter {
 
     private zkConfig: IZKSelfConfig;
     private client: ZK;

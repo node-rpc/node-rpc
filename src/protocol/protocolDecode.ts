@@ -1,7 +1,7 @@
-import Context from "../server/context";
+import { Context } from "../server/context";
 import { NextFNType } from "../server/middleware";
 
-export default interface IProtocolEncode {
+export interface IProtocolDecode {
     use(ctx: Context, next: NextFNType): Promise<any>;
     decode(ctx: Context): void;
 }

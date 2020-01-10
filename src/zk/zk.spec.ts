@@ -1,6 +1,6 @@
 import signale from "signale";
 import ZooKeeper from "zookeeper";
-import ZKClient from "./zk";
+import { ZKClient } from "./zk";
 
 const constants = ZooKeeper.constants;
 const path: string = "/hello";

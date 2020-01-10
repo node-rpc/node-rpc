@@ -1,11 +1,11 @@
 import net from "net";
 import signale from "signale";
-import Context from "../server/context";
-import Router from "../server/router";
-import Application from "../server/server";
-import Writer from "../server/writer";
-import V1Decode from "./v1/v1Decode";
-import V1Encode from "./v1/v1Encode";
+import { Context } from "../server/context";
+import { Router } from "../server/router";
+import { Server as Application } from "../server/server";
+import { Writer } from "../server/writer";
+import { V1Decode } from "./v1/v1Decode";
+import { V1Encode } from "./v1/v1Encode";
 
 describe("test router and protocol", () => {
     const decode: V1Decode = new V1Decode();
@@ -31,7 +31,7 @@ describe("test router and protocol", () => {
             signale.debug(`recive data ${JSON.stringify(ctx.receive)}`);
             signale.debug("set send data:");
 
-            ctx.dataWillBeDecode = {
+            ctx.dataWillBeEncode = {
                 send: "send data",
             };
         });
