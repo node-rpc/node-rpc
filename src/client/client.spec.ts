@@ -3,7 +3,7 @@ import signale from "signale";
 import { V1Decode } from "../protocol/v1/v1Decode";
 import { V1Encode } from "../protocol/v1/v1Encode";
 import { Context } from "../server/context";
-import Router from "../server/router";
+import { Router } from "../server/router";
 import { Server as Application } from "../server/server";
 import { Writer } from "../server/writer";
 import { Client } from "./client";
@@ -34,14 +34,19 @@ describe("client unit test", () => {
     });
 
     test("set router", async () => {
-        router.on("dowork", (ctx: Context) => {
+        router.on("dowork", async (ctx: Context) => {
             signale.debug("do work router is runed");
             signale.debug(`recive data ${JSON.stringify(ctx.receive)}`);
             signale.debug("set send data:");
 
-            ctx.dataWillBeEncode = {
-                send: "send data",
-            };
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    ctx.dataWillBeEncode = {
+                        send: "send data 500 minutes",
+                    };
+                    resolve();
+                }, 1000);
+            });
         });
 
         router.on("homework", (ctx: Context) => {

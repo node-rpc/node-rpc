@@ -32,6 +32,9 @@ export class Server extends EventEmitter {
         // listen
         this.server.on("connection", (socket: net.Socket) => this.connect(socket));
         this.server.on("error", (err: Error) => this.handleError(err));
+
+        // emit start event
+        this.emit("start", { host: this.host, port: this.port });
     }
 
     public connect(socket: net.Socket) {

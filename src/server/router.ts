@@ -1,4 +1,4 @@
-import EventEmitter from "events";
+import { allSettled } from "../utils/allSettled";
 import { Context, IReceiveDataType } from "./context";
 import { MF, NextFNType } from "./middleware";
 
@@ -6,10 +6,10 @@ type Listener = (ctx: Context) => void;
 
 export class Router {
     public route: MF;
-    private event: EventEmitter;
+    private events: Map<string, Listener[]>;
 
     constructor() {
-        this.event = new EventEmitter();
+        this.events = new Map();
         this.route = this.use.bind(this);
     }
 
@@ -21,7 +21,7 @@ export class Router {
     public async use(ctx: Context, next: NextFNType) {
         const receive: IReceiveDataType = ctx.receive;
         if (receive && receive.identifier) {
-            this.emit(receive.identifier, ctx);
+            await this.emit(receive.identifier, ctx);
         }
 
         if (next) {
@@ -35,10 +35,21 @@ export class Router {
     }
 
     public on(eventName: string, listener: Listener) {
-        this.event.on(eventName, listener);
+        const listeners: Listener[] = this.events.get(eventName) || [];
+        listeners.push(listener);
+        this.events.set(eventName, listeners);
     }
 
-    private emit(eventName: string, ctx: Context) {
-        this.event.emit(eventName, ctx);
+    private async emit(eventName: string, ctx: Context) {
+        const waitWorks: Array<Promise<any>> = [];
+        const listeners: Listener[] = this.events.get(eventName) || [];
+
+        if (listeners.length > 0) {
+            listeners.forEach((listener) => {
+                waitWorks.push(Promise.resolve(listener(ctx)));
+            });
+        }
+
+        await allSettled(waitWorks);
     }
 }
