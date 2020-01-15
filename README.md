@@ -52,9 +52,13 @@ const message = {
 client.on("data", (msg) => {
     signale.debug("client recieve data:");
     signale.debug(msg);
+
+    client.close();
 });
 
+
 client.push(message);
+
 
 ```
 
@@ -91,6 +95,7 @@ router.on("querywork", async (ctx: Context) => {
             ctx.dataWillBeEncode = {
                 send: "send data after waiting 1000 ms",
             };
+            resolve();
         }, 1000);
     });
 
@@ -99,9 +104,9 @@ router.on("querywork", async (ctx: Context) => {
 
 const server: Server = new Server(config);
 
-server.use(log);
 server.use(decode.use);
 server.use(router.route);
+server.use(log);
 server.use(encode.use);
 server.use(writer.use);
 
@@ -110,7 +115,6 @@ server.on("start", (conf) => {
 });
 
 server.start();
-
 
 ```
 
