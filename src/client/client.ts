@@ -28,11 +28,10 @@ export class Client extends EventEmitter {
         this.encoder = new Encoder();
         this.decoder = new Decoder();
         this.socket = new net.Socket();
-        // this.bufferCache = [];
-        // this.stringCache = [];
         this.queue = [];
         this.ready = false;
-        this.duration = serverConfig.duration || 100; // thresold message to wait
+        // thresold message to wait
+        this.duration = serverConfig.duration || 100;
 
         this.attach();
     }
@@ -77,6 +76,20 @@ export class Client extends EventEmitter {
             sendData.waitStartingTime = Date.now();
             this.queue.push(sendData);
         }
+    }
+
+    public finish(sendData: IChanelDataType) {
+        if (this.ready && this.queue.length <= 0) {
+            this.write(sendData);
+        } else {
+            // count wait time
+            sendData.waitStartingTime = Date.now();
+            this.queue.push(sendData);
+        }
+    }
+
+    public close() {
+        this.socket.destroy();
     }
 
     private flush() {
