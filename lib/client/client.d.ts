@@ -24,6 +24,9 @@ export declare class Client extends EventEmitter {
     decode(dataReceived: string | Buffer): void;
     write(dataWillBeSend: IChanelDataType): boolean;
     push(sendData: IChanelDataType): void;
+    finish(sendData: IChanelDataType): void;
+    close(): void;
     private flush;
     private attach;
+    private checkQueueIsNull;
 }
