@@ -3,7 +3,6 @@ import net from "net";
 import { Decoder, IDecoder } from "./decoder";
 import { Encoder, IEncoder } from "./encoder";
 import { IChanelDataType } from "./type";
-import signale from "signale";
 
 export interface IServerConfig {
     ip: string;
@@ -92,7 +91,7 @@ export class Client extends EventEmitter {
     }
 
     public close() {
-        this.on("_close", () => {
+        this.on("onClose", () => {
             try {
                 this.socket.destroy();
                 this.emit("closeFinished");
@@ -100,6 +99,8 @@ export class Client extends EventEmitter {
                 this.emit("closeError", e);
             }
         });
+        // do check
+        this.checkQueueIsNull();
     }
 
     private flush() {
@@ -129,7 +130,7 @@ export class Client extends EventEmitter {
 
     private checkQueueIsNull() {
         if (!this.queue.length) {
-            this.emit("_close");
+            this.emit("onClose");
             return true;
         }
 
