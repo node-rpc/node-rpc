@@ -21,7 +21,7 @@ npm i node-rpc-lite
 
 ### direct connection mode
 
-#### client usage
+#### client
 
 ``` js
 import { Client } from "node-rpc-lite";
