@@ -114,6 +114,20 @@ describe("client unit test", () => {
         });
     });
 
+    test("close client", () => {
+        setTimeout(() => {
+            client.on("closeFinished", () => {
+                signale.debug("client closed");
+            });
+
+            client.on("closeError", () => {
+                signale.debug("client occur error");
+            });
+
+            client.close();
+        }, 1000);
+    });
+
     test("close server", async () => {
         await new Promise((resolve) => {
             setTimeout(() => {

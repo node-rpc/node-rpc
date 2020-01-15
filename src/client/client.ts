@@ -3,6 +3,7 @@ import net from "net";
 import { Decoder, IDecoder } from "./decoder";
 import { Encoder, IEncoder } from "./encoder";
 import { IChanelDataType } from "./type";
+import signale from "signale";
 
 export interface IServerConfig {
     ip: string;
@@ -18,8 +19,6 @@ export class Client extends EventEmitter {
     private queue: IChanelDataType[];
     private ready: boolean;
     private duration: number;
-    // private bufferCache: Buffer[];
-    // private stringCache: string[];
 
     constructor(serverConfig: IServerConfig) {
         super();
@@ -65,7 +64,11 @@ export class Client extends EventEmitter {
             this.emit("throwway", dataWillBeSend);
             return true;
         }
-        return this.socket.write(this.encode(dataWillBeSend));
+
+        const writeSuccess: boolean = this.socket.write(this.encode(dataWillBeSend));
+        this.checkQueueIsNull();
+
+        return writeSuccess;
     }
 
     public push(sendData: IChanelDataType) {
@@ -89,7 +92,14 @@ export class Client extends EventEmitter {
     }
 
     public close() {
-        this.socket.destroy();
+        this.on("_close", () => {
+            try {
+                this.socket.destroy();
+                this.emit("closeFinished");
+            } catch (e) {
+                this.emit("closeError", e);
+            }
+        });
     }
 
     private flush() {
@@ -115,5 +125,14 @@ export class Client extends EventEmitter {
         this.socket.on("data", (data: Buffer | string) => {
             this.decode(data);
         });
+    }
+
+    private checkQueueIsNull() {
+        if (!this.queue.length) {
+            this.emit("_close");
+            return true;
+        }
+
+        return false;
     }
 }
