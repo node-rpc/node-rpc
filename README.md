@@ -118,6 +118,8 @@ server.start();
 
 ```
 
+### run multiple server
 
+##### [please view example](https://github.com/node-rpc/node-rpc-examples/blob/master/package.json#L12), also could use [node-agent-cli](https://github.com/node-rpc/node-agent).
 
 
