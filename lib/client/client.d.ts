@@ -17,7 +17,7 @@ export declare class Client extends EventEmitter {
     private ready;
     private duration;
     constructor(serverConfig: IServerConfig);
-    connnect(): void;
+    connect(): void;
     useEncoder(encoder: IEncoder): void;
     useDecoder(decoder: IDecoder): void;
     encode(dataWillBeDecode: IChanelDataType): Buffer;
