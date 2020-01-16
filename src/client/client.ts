@@ -34,7 +34,7 @@ export class Client extends EventEmitter {
         this.attach();
     }
 
-    public connnect() {
+    public connect() {
         const { port, ip } = this.config;
         this.socket.connect(port, ip);
     }

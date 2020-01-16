@@ -74,7 +74,7 @@ describe("client unit test", () => {
 
     // client
     test("connect", () => {
-        client.connnect();
+        client.connect();
         signale.debug("connect success !!");
     });
 
