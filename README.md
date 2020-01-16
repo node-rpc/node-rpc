@@ -10,6 +10,7 @@ with some features:
 * support middileware mechanism which is same as koa.
 * can recieve request base on event's behavior.
 * support custome define your own decoder and encoder.
+* Load balancing base on Zookeeper
 
 ## Usage
 
