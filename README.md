@@ -8,7 +8,7 @@ It's a lite rpc framework base on Node.js.
 with some features:
 * using hessian protocol impleaments encode and decode operation.
 * support middileware mechanism which is same as koa.
-* can recieve request base on event's behavior.
+* can reiceve request base on event's behavior.
 * support custome define your own decoder and encoder.
 * Load balancing base on Zookeeper
 
