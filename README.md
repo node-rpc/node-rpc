@@ -9,7 +9,7 @@ with some features:
 * using hessian protocol impleaments encode and decode operation.
 * support middileware mechanism which is same as koa.
 * can reiceve request base on event's behavior.
-* support custome define your own decoder and encoder.
+* support customize define your own decoder and encoder.
 * Load balancing base on Zookeeper
 
 ## Usage
